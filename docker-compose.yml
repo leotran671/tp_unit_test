@@ -4,6 +4,8 @@ services:
     container_name: MDS-Node
     image: node:latest
     working_dir: /home/node/app
+    env_file:
+      - .env
     command:
       - /bin/sh
       - '-c'
@@ -12,3 +14,19 @@ services:
       - '3000:3000'
     volumes:
       - './src:/home/node/app'
+    links:
+      - mongo
+    networks:
+      - node-project
+  mongo:
+    container_name: project_mongo
+    image: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - './data:/data/db'
+    networks:
+      - node-project
+networks:
+  node-project:
+    driver: bridge
